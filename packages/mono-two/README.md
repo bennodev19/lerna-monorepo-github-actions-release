@@ -1,4 +1,4 @@
-# @azu/mono-two
+# @bennodev/mono-two
 
 Deps
 

@@ -1,4 +1,4 @@
-# @azu/mono-three
+# @bennodev/mono-three
 
 deps +
 
