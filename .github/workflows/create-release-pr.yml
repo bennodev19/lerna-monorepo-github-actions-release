@@ -60,7 +60,6 @@ jobs:
             - [ ] TODO
           labels: "Type: Release"
           branch: "release/&{{ steps.changelog.outputs.version }}"
-          request-to-parent: false
       - name: 🏁 Result
         run: |
           echo "✔️Finished"
