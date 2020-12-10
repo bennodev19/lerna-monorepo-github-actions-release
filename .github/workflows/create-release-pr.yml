@@ -33,6 +33,10 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
+        # Test
+      - name: 🐛 Run Tests
+        run: yarn run test
+
         # Create new Version
       - name: 🗽 New Version
         run: yarn run versionup --yes
@@ -72,7 +76,6 @@ jobs:
             - [ ] TODO
           labels: "release"
           branch: "release/${{ steps.changelog.outputs.version }}"
-          base: "develop"
 
         # Print some important Notes
       - name: 🏁 Result
