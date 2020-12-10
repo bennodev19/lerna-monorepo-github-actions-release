@@ -33,9 +33,13 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-        # Test
+        # Run all Tests
       - name: 🐛 Run Tests
         run: yarn run test
+
+        # Build Packages (for testing)
+      - name: 🔨 Run Build
+        run: yarn run build
 
         # Create new Version
       - name: 🗽 New Version
