@@ -28,14 +28,17 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       - name: 🗽 New Version
-        run: |
-          npm run versionup --yes
+        run: yarn run versionup --yes
       - name: 🖋 Set new Version to Output # This adds the above create Version of lerna to the outputs so that we can get it in the PullRequest with steps.changelog.outputs.version
         id: changelog
         shell: bash -ex {0}
         run: |
           version=$(node -p 'require("./lerna.json").version')
           echo "::set-output name=version::${version}"
+      - name: 🗂 Check Repo Size
+        uses: preactjs/compressed-size-action@v2
+        with:
+          repo-token: "${{ secrets.GITHUB_TOKEN }}"
       - name: 📤 Create Pull Request
         id: create-pull-request
         uses: peter-evans/create-pull-request@v2 # https://github.com/peter-evans/create-pull-request
