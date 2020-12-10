@@ -37,9 +37,10 @@ jobs:
           echo "::set-output name=version::${version}"
       - name: 📤 Create Pull Request
         id: create-pull-request
-        uses: peter-evans/create-pull-request@v3 # https://github.com/peter-evans/create-pull-request
+        uses: peter-evans/create-pull-request@v3  # https://github.com/peter-evans/create-pull-request
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
+          path: ${{ secrets.GITHUB_PATH }}
           commit-message: "Update v${{ steps.changelog.outputs.version }}"
           committer: GitHub <noreply@github.com>
           author: "${{ github.actor }} <${{ github.actor }}@users.noreply.github.com>"
@@ -59,9 +60,10 @@ jobs:
 
             - [ ] TODO
           labels: "Type: Release"
-          branch: "release/&{{ steps.changelog.outputs.version }}"
+          branch: "release/${{ steps.changelog.outputs.version }}"
       - name: 🏁 Result
         run: |
           echo "✔️Finished"
-          echo "✔️Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }} | ${{ steps.create-pull-request.outputs.pr_number }}"
+          echo "✔️Pull Request Number - ${{ steps.create-pull-request.outputs.pr_number }}"
+          echo "✔️Pull Request URL - ${{ steps.create-pull-request.outputs.pull-request-url }}"
           echo "✔️Version - ${{ steps.changelog.outputs.version }}"
