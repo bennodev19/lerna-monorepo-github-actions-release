@@ -20,7 +20,7 @@ jobs:
         with:
           node-version: 12
       - name: ⏳ Install
-        run: npm ci
+        run: yarn install
       - name: 👷 Configure Git User
         run: |
           git config --global user.name 'bennodev19'
