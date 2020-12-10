@@ -3,8 +3,6 @@ on:
   issue_comment:
     types: [created]
 
-# require public member
-# private member is treated as CONTRIBUTOR
 jobs:
   createPullRequest:
     if: |
@@ -13,28 +11,41 @@ jobs:
       startsWith(github.event.comment.body, '/create release')
     runs-on: ubuntu-latest
     steps:
+        # Checkout the Branch
       - name: 📚 Checkout
         uses: actions/checkout@v2
+
+        # Setup NodeJS
       - name: 🟢 Setup Node ${{ matrix.node_version }}
         uses: actions/setup-node@v1
         with:
           node-version: 12
+
+        # Install Dependencies
       - name: ⏳ Install
         run: yarn install
+
+        # Configure Git User so that we can perform Git Actions like commits
       - name: 👷 Configure Git User
         run: |
           git config --global user.name 'bennodev19'
           git config --global user.email 'bennodev19@users.noreply.github.com'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+        # Create new Version
       - name: 🗽 New Version
         run: yarn run versionup --yes
-      - name: 🖋 Set new Version to Output # This adds the above create Version of lerna to the outputs so that we can get it in the PullRequest with steps.changelog.outputs.version
+
+        # Adds the above created version to the output so that we can get it later in the pull request with 'steps.changelog.outputs.version'
+      - name: 🖋 Set new Version to Output
         id: changelog
         shell: bash -ex {0}
         run: |
           version=$(node -p 'require("./lerna.json").version')
           echo "::set-output name=version::${version}"
+
+        # Create the Pull Request
       - name: 📤 Create Pull Request
         id: create-pull-request
         uses: peter-evans/create-pull-request@v3  # https://github.com/peter-evans/create-pull-request
@@ -62,6 +73,8 @@ jobs:
           labels: "release"
           branch: "release/${{ steps.changelog.outputs.version }}"
           base: "develop"
+
+        # Print some important Notes
       - name: 🏁 Result
         run: |
           echo "✔️ Finished"
