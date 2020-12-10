@@ -37,7 +37,7 @@ jobs:
           echo "::set-output name=version::${version}"
       - name: 📤 Create Pull Request
         id: create-pull-request
-        uses: peter-evans/create-pull-request@v2 # https://github.com/peter-evans/create-pull-request
+        uses: peter-evans/create-pull-request@v3 # https://github.com/peter-evans/create-pull-request
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update v${{ steps.changelog.outputs.version }}"
@@ -61,7 +61,7 @@ jobs:
           labels: "Type: Release"
           branch: "release/&{{ steps.changelog.outputs.version }}"
           request-to-parent: false
-      - name: Check outputs
+      - name: 🏁 Result
         run: |
           echo "✔️Finished"
           echo "✔️Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }} | ${{ steps.create-pull-request.outputs.pr_number }}"
