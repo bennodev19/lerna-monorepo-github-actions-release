@@ -1,6 +1,6 @@
 {
   "name": "@bennodev/mono-two",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "description": "",
   "homepage": "https://github.com/azu/lerna-monorepo-github-actions-release/tree/master/packages/mono-two/",
   "bugs": {
