@@ -59,11 +59,12 @@ jobs:
             ### Bug Fixes
 
             - [ ] TODO
-          labels: "Type: Release"
+          labels: "release"
           branch: "release/${{ steps.changelog.outputs.version }}"
+          base: "develop"
       - name: 🏁 Result
         run: |
-          echo "✔️Finished"
-          echo "✔️Pull Request Number - ${{ steps.create-pull-request.outputs.pr_number }}"
-          echo "✔️Pull Request URL - ${{ steps.create-pull-request.outputs.pull-request-url }}"
-          echo "✔️Version - ${{ steps.changelog.outputs.version }}"
+          echo "✔️ Finished"
+          echo "✔️ Pull Request Number - ${{ steps.create-pull-request.outputs.pr_number }}"
+          echo "✔️ Pull Request URL - ${{ steps.create-pull-request.outputs.pull-request-url }}"
+          echo "✔️ Version - ${{ steps.changelog.outputs.version }}"
