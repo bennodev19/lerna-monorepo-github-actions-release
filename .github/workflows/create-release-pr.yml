@@ -13,33 +13,31 @@ jobs:
       startsWith(github.event.comment.body, '/create release')
     runs-on: ubuntu-latest
     steps:
-      - name: Checkout
+      - name: 📚 Checkout
         uses: actions/checkout@v2
-      - name: Setup Node.js
+      - name: 🟢 Setup Node ${{ matrix.node_version }}
         uses: actions/setup-node@v1
         with:
           node-version: 12
-          registry-url: 'https://npm.pkg.github.com'
-      - name: Install
-        run: yarn install
-      - name: Git Identity
+      - name: ⏳ Install
+        run: npm ci
+      - name: 👷 Configure Git User
         run: |
           git config --global user.name 'bennodev19'
           git config --global user.email 'bennodev19@users.noreply.github.com'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-      - name: Versionup commit
-        run: |
-          yarn run versionup --yes
-      - name: Set current CHANGELOG to output
+      - name: 🗽 New Version
+        run: lerna version --conventional-commits --no-git-tag-version --yes
+      - name: 🖋 Set new Version to Output # This adds the above create Version of lerna to the outputs so that we can get it in the PullRequest with steps.changelog.outputs.version
         id: changelog
         shell: bash -ex {0}
         run: |
           version=$(node -p 'require("./lerna.json").version')
           echo "::set-output name=version::${version}"
-      - name: Create Pull Request
-        id: cpr
-        uses: peter-evans/create-pull-request@v2
+      - name: 📤 Create Pull Request
+        id: create-pull-request
+        uses: peter-evans/create-pull-request@v2 # https://github.com/peter-evans/create-pull-request
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           commit-message: "Update v${{ steps.changelog.outputs.version }}"
@@ -61,9 +59,10 @@ jobs:
 
             - [ ] TODO
           labels: "Type: Release"
-          branch: "release/next"
+          branch: "release/&{{ steps.changelog.outputs.version }}"
           request-to-parent: false
       - name: Check outputs
         run: |
-          echo "Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }}"
-          echo "Pull Request Number - ${{ steps.cpr.outputs.pr_number }}"
+          echo "✔️Finished"
+          echo "✔️Pull Request Number - ${{ env.PULL_REQUEST_NUMBER }} | ${{ steps.create-pull-request.outputs.pr_number }}"
+          echo "✔️Version - ${{ steps.changelog.outputs.version }}"
